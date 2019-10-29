@@ -20,7 +20,63 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Dataset Overview
 
-This dataset is from the United States National Highway Traffic Safety administration. The data is broken into many different pieces focusing on different variables. This dataset is updated yearly to continue informing the US public. Furthermore the data can be downloaded in a variety of ways for easy analysis.
+The United States National Highway Traffic Safety Aministration website reports statistics on fatal crashes as part of the Fatality Analysis Reporting System.This dataset is broken into many different tables to emphasize different variables. This dataset is updated yearly to continue informing the US public. Currently, data from years 1994 to 2017 are available. Furthermore, the data can be downloaded in a variety of ways for easy analysis.
+
+***
+
+**The data tables available are as follows:**
+ 
+ 
+Summary
+
+* General
+
+Trends
+
+* General
+* Occupants
+* Large Truck Related
+* Nonmotorists
+* Alcohol
+* Restraints
+
+Crashes
+
+* Time
+* Location
+* Circumstances
+* Alcohol
+  
+Vehicles
+
+* All Vehicles
+* Location
+* Passenger Cars
+* Light Trucks
+* Large Trucks
+* Motorcycles
+* Buses
+  
+People
+
+* All Victims
+* Drivers
+* Occupants
+* Restraints
+* Motorcyclists
+* School Bus Related
+* Pedestrians
+* Pedalcyclists
+  
+States
+
+* Crashes and All Victims
+* Occupants
+* Pedestrians
+* Alcohol
+* Fatalities and Fatality Rates
+* Laws
+
 
 ### Background
 
