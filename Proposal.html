@@ -378,7 +378,7 @@ summary {
 <h2>Sections</h2>
 <div id="dataset-overview" class="section level3">
 <h3>Dataset Overview</h3>
-<p>The United States National Highway Traffic Safety Aministration website reports statistics on fatal crashes as part of the Fatality Analysis Reporting System.This dataset is broken into many different tables to emphasize different variables. This dataset is updated yearly to continue informing the US public. Currently, data from years 1994 to 2017 are available. Furthermore, the data can be downloaded in a variety of ways for easy analysis.</p>
+<p>The United States National Highway Traffic Safety Aministration website reports statistics on fatal crashes as part of the Fatality Analysis Reporting System. This dataset is broken into many different tables to emphasize different variables. This dataset is updated yearly to continue informing the US public. Currently, data from years 1994 to 2017 is available. Furthermore, the data can be downloaded in a variety of ways for easy analysis.</p>
 <hr />
 <p><strong>The data tables available are as follows:</strong></p>
 <p>Summary</p>
@@ -434,29 +434,19 @@ summary {
 </div>
 <div id="background" class="section level3">
 <h3>Background</h3>
-<p>Nation-wide motor vehicle accidents are a topic of safety that concern both the general public and lawmakers. Statistics through the National Highway Traffic Safety Administration provide the means for insight into what factors influence collisions. These insights could provide awareness for drivers on what factors to be wary of while driving, such as number of passengers, weather conditions, location, time of day, and other variables that the data provide. Communicating the relationships the data reveal can allow drivers to be safer in or avoid conditions that are more prone to accidents. For lawmakers, the same insights could influence traffic laws to increase safety on the road. In addition to influencing traffic laws, the data could provide insight into why current traffic laws are currently in place, such as legal limits for alcohol. The collision data are expansive and lends itself to many angles for analysis. As data exploration and data cleaning progress, we will be able to narrow the scope of analysis and determine the effect a handful of factors have on collision rates.</p>
+<p>Nation-wide motor vehicle accidents are a topic of safety that concern both the general public and lawmakers. Statistics through the National Highway Traffic Safety Administration provide the means for insight into what factors influence collisions. These insights could provide awareness for drivers on what factors to be wary of while driving, such as number of passengers, weather conditions, location, time of day, and other variables that the data provide. Communicating the relationships the data reveal can allow drivers to be safer in or avoid conditions that are more prone to accidents. For lawmakers, the same insights could influence traffic laws which increase safety on the road. In addition to influencing traffic laws, the data could provide insight into why current traffic laws are currently in place, such as legal limits for alcohol. The collision data is expansive and lends itself to many angles for analysis. As data exploration and data cleaning progress, we will be able to narrow the scope of analysis and determine the effect a handful of factors have on collision rates.</p>
 </div>
 <div id="plan-for-analysis" class="section level3">
 <h3>Plan for Analysis</h3>
-<p>From the data, we want to learn the main causes of traffic accidents in the US. We will look at when and where accidents happen and what factors are most influential.</p>
+<p>Our goal in analyzing the data is to learn about which factors contribute the most to the number of fatal traffic accidents in the US. Some questions we are interested in answering with the data are:</p>
 <ul>
-<li><p>During what time period has the highest accident rate.</p></li>
-<li><p>The relationship between the number of victims and the driver blood alcohol concentration.</p></li>
-<li><p>What type of vehicle has the highest rate of collision. Does the vehicle type related to the number of victims.</p></li>
-<li><p>Who are the people(race, gender, age ) that die in the fatal accidents.</p></li>
+<li><p>During what time period has the highest accident rate?</p></li>
+<li><p>What is the relationship between the number of victims and the driver blood alcohol concentration?</p></li>
+<li><p>What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?</p></li>
+<li><p>Who are the people(race, gender, age) who die in these accidents?</p></li>
 </ul>
-<p>Before we conduct this project, we are going to clean the dataset. The methodologies:</p>
-<p>Data cleaning:</p>
-<ul>
-<li><p>Drop the NAs, irrelevant columns</p></li>
-<li><p>Duplicate elimination</p></li>
-<li><p>Data transformation</p></li>
-</ul>
-<p>Data Visualization:</p>
-<ul>
-<li><p>Basic plotting(line, bar, histogram)</p></li>
-<li><p>ggplot</p></li>
-</ul>
+<p>Before conducting the analysis, we are going to clean the dataset. We will drop the NAs and irrelivant columns, eliminate duplicates, and transform the data as needed. Since the data is broken into several different tables, we will need to join several of them together using year as a key.</p>
+<p>To visualize the data, we will use mainly tables and ggplot. We will use several different types of plots (histograms, barplots, scatterplot matrix, correlation matrix, ect.) to see how variables are distributed and how thay relate to the number of fatal accidents. By visualizing the data this way, we hope to see relationships that help us answer the questions listed above.</p>
 </div>
 </div>
 </div>
