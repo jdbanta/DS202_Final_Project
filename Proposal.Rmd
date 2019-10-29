@@ -1,5 +1,5 @@
 ---
-title: "DS 202 Project part 1"
+title: "DS 202 Project Proposal"
 author: John Banta (Project Coordinator), Kelsey Mclnturff, Luping Wang, and Brenna
   Walters
 date: "10/29/2019"
