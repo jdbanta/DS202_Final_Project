@@ -1,0 +1,58 @@
+---
+title: "DS 202 Project part 1"
+author: John Banta (Project Coordinator), Kelsey Mclnturff, Luping Wang, and Brenna
+  Walters
+date: "10/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Important Links
+
+[Data](https://www-fars.nhtsa.dot.gov/Trends/TrendsGeneral.aspx)
+
+[Github Repository](https://github.com/jdbanta/DS202_Final_Project)
+
+## Sections {.tabset}
+
+### Dataset Overview
+
+This dataset is from the United States National Highway Traffic Safety administration. The data is broken into many different pieces focusing on different variables. This dataset is updated yearly to continue informing the US public. Furthermore the data can be downloaded in a variety of ways for easy analysis.
+
+### Background
+
+Nation-wide motor vehicle accidents are a topic of safety that concern both the general public and lawmakers. Statistics through the National Highway Traffic Safety Administration provide the means for insight into what factors influence collisions. These insights could provide awareness for drivers on what factors to be wary of while driving, such as number of passengers, weather conditions, location, time of day, and other variables that the data provide. Communicating the relationships the data reveal can allow drivers to be safer in or avoid conditions that are more prone to accidents. For lawmakers, the same insights could influence traffic laws to increase safety on the road. In addition to influencing traffic laws, the data could provide insight into why current traffic laws are currently in place, such as legal limits for alcohol. The collision data are expansive and lends itself to many angles for analysis. As data exploration and data cleaning progress, we will be able to narrow the scope of analysis and determine the effect a handful of factors have on collision rates.
+
+### Plan for Analysis
+
+From the data, we want to learn the main causes of traffic accidents in the US. We will look at when and where accidents happen and what factors are most influential. 
+
+* During what time period has the highest accident rate. 
+
+* The relationship between the number of victims and the driver blood alcohol concentration. 
+
+* What type of vehicle has the highest rate of collision. Does the vehicle type related to the number of victims. 
+
+* Who are the people(race, gender, age ) that die in the fatal accidents.
+
+Before we conduct this project, we are going to clean the dataset. 
+The methodologies:
+
+Data cleaning:
+
+* Drop the NAs, irrelevant columns
+
+* Duplicate elimination
+
+* Data transformation
+
+Data Visualization:
+
+* Basic plotting(line, bar, histogram)
+
+* ggplot 
+
+
