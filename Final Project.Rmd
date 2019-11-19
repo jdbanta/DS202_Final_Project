@@ -10,3 +10,27 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Sections {.tabset}
+
+
+
+### Data Cleaning
+
+
+
+### Question 1
+
+#### During what time period has the highest accident rate?
+
+### Question 2
+
+#### What is the relationship between the number of victims and the driver blood alcohol concentration?
+
+### Question 3
+
+#### What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?
+
+### Question 4
+
+#### Who are the people(race, gender, age) who die in these accidents?
+
