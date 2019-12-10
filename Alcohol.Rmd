@@ -1,0 +1,98 @@
+---
+title: "VictimsAndAlcohol"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library("readxl")
+#my_data <- read_excel("Alcohol.xls", sheet = "data")
+my_data <- read.table(file = "Alcohol.xls", 
+                      sep = "\t", header=TRUE)
+head(my_data)
+```
+
+*Blood Alcohol Concentration
+
+```{r}
+colnames(my_data)
+```
+```{r}
+#Blood Alcohol Concentration
+#Create 3 tables for different levels of BAC
+library(dplyr)
+Zero_BAC = select(my_data, -4:-11)
+Mid_BAC=select(my_data, -2:-3,-6:-11)
+High_BAC = select(my_data, -2:-5,-8:-11)
+Overall_BAC = select(my_data, -2:-8,-11)
+
+```
+
+```{r}
+colnames(Zero_BAC)[colnames(Zero_BAC)=="X"] <- "Year"
+colnames(Zero_BAC)[colnames(Zero_BAC)=="BAC....00"] <- "Number of Fatalities without Alcohol"
+colnames(Zero_BAC)[colnames(Zero_BAC)=="X.1"] <- "Percent"
+
+colnames(Mid_BAC)[colnames(Mid_BAC)=="X"] <- "Year"
+colnames(Mid_BAC)[colnames(Mid_BAC)=="BAC....01...07"] <- "Number of Fatalities"
+colnames(Mid_BAC)[colnames(Mid_BAC)=="X.2"] <- "Percent"
+
+colnames(High_BAC)[colnames(High_BAC)=="X"] <- "Year"
+colnames(High_BAC)[colnames(High_BAC)=="BAC....08."] <- "Number of Fatalities"
+colnames(High_BAC)[colnames(High_BAC)=="X.3"] <- "Percent"
+
+colnames(Overall_BAC)[colnames(Overall_BAC)=="X"] <- "Year"
+colnames(Overall_BAC)[colnames(Overall_BAC)=="Total.Fatalities.in.Alcohol..Related.Crashes"] <- "Total.Fatalities.in.Alcohol"
+colnames(Overall_BAC)[colnames(Overall_BAC)=="X.4"] <- "Percent"
+
+#Drop first row for each table 
+Zero_BAC = Zero_BAC[-1,]
+Mid_BAC = Mid_BAC[-1,]
+High_BAC= High_BAC[-1,]
+Overall_BAC=Overall_BAC[-1,]
+
+head(Zero_BAC)
+head(Mid_BAC)
+head(High_BAC)
+head(Overall_BAC)
+
+```
+```{r}
+
+library(ggplot2)
+ggplot(Zero_BAC, aes(x=Year, y=as.numeric(as.character(`Number of Fatalities without Alcohol`)), color=Percent))+ylim(100,3000)+geom_smooth()+geom_point()+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities without Alcohol from Year 1994 to 2017", y = "Number of Fatalities")
+
+```
+
+
+```{r}
+ggplot(Overall_BAC, aes(x=Year, y=as.numeric(as.character(`Total.Fatalities.in.Alcohol`)), color=Percent))+ylim(100,3000) +geom_point()+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Total Fatalities in Alcohol from Year 1994 to 2017",y = "Number of Fatalities")
+```
+
+```{r}
+ggplot(Mid_BAC, aes(x=Year, y=as.numeric(as.character(`Number of Fatalities`)), color=Percent))+ylim(100,1300)+geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities(BAC0.01~0.08) from Year 1994 to 2017", y = "Number of Fatalities")
+
+```
+
+
+```{r}
+ggplot(High_BAC, aes(x=Year, y=as.numeric(as.character(`Number of Fatalities`)), color=Percent))+ylim(100,1300)+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities(BAC0.08+) from Year 1994 to 2017" , y = "Number of Fatalities")
+```
+
+```{r}
+library(dplyr) 
+Alcohol_vs_NoAlcohol = 
+  Zero_BAC %>%
+    full_join(Overall_BAC, by ="Year")
+
+Alcohol_vs_NoAlcohol=select(Alcohol_vs_NoAlcohol, -3,-5)
+Alcohol_vs_NoAlcohol
+```
+
+
+
+
