@@ -34,11 +34,11 @@ To visualize the data, we will use mainly tables and ggplot. We will use several
 
 ### Question 1
 
-#### During what time period has the highest accident rate?
+#### **During what time period has the highest accident rate?**
 
 ### Question 2
 
-#### What is the relationship between the number of victims and the driver blood alcohol concentration?
+#### **What is the relationship between the number of victims and the driver blood alcohol concentration?**
 
 ##### Data Cleaning
 ```{r}
@@ -132,10 +132,7 @@ https://stackoverflow.com/questions/29278153/plotting-with-ggplot2-error-discret
 
 ### Question 3
 
-#### What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?
-
-
-#### What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?
+#### **What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?**
 
 ##### Data Cleaning
 
@@ -187,7 +184,7 @@ colnames(Occupant)
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 ggplot(Occupant,aes(Year,Total))+geom_line(color="Pink")+labs(x="Year",y="Occupants", title="Accidents by Year")+geom_line(aes(Year, PV_Occupants),color="Red")+geom_line(aes(Year,LiT_Occupants),color="blue")+geom_line(aes(Year,LT_Occupants),color="green")+geom_line(aes(Year,MC_Occupants))+annotate("Label",x=1996,y=.925,label="Large Trucks")+annotate("Label",x=1997,y=25000,label="Passenger Vehicle")+annotate("Label",x=1996,y=15000,label="Light Trucks")+annotate("Label",x=1996,y=5000,label="Motorcycles")+annotate("label",x=1996,y=30000,label="Total")
 ```
 
@@ -195,7 +192,7 @@ ggplot(Occupant,aes(Year,Total))+geom_line(color="Pink")+labs(x="Year",y="Occupa
 
 ##### Conclusions
 
-Looking at the above graphs, it appears that while there are fewer accidents including motorcycles by number. However when accounting for the smaller amount of motorcycles, it appears that they get into accidents at a higher rate. On the other side passenger vehicles have the most total number of accidents every year, however the involvement rate is consistently one of the lowest ones.
+Looking at the above graphs, it appears that while there are fewer accidents including motorcycles by number alone. However when accounting for the smaller amount of motorcycles, it appears that they get into accidents at a higher rate. This could be due to the fact that they are much smaller than other motor vehicles and hence do not get seen as easily as other motor vehicles. On the other side passenger vehicles have the most total number of accidents every year, however the involvement rate is consistently one of the lowest ones.
 
 ##### Challenges
 
@@ -207,7 +204,7 @@ https://stackoverflow.com/questions/44012554/r-how-can-i-annotate-a-ggplot-with-
 
 ### Question 4
 
-#### Who are the people(race, gender, age) who die in these accidents?
+#### **Who are the people(race, gender, age) who die in these accidents?**            
 
 **Libraries**
 ```{r}
