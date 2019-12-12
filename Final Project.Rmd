@@ -14,8 +14,22 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-### Data Cleaning
+### Proposal
 
+The United States National Highway Traffic Safety Administration website reports statistics on fatal crashes as part of the Fatality Analysis Reporting System. This dataset is broken into many different tables to emphasize different variables. This dataset is updated yearly to continue informing the US public. Currently, data from years 1994 to 2017 is available. Furthermore, the data can be downloaded in a variety of ways for easy analysis.
+Nation-wide motor vehicle accidents are a topic of safety that concern both the general public and lawmakers. Statistics through the National Highway Traffic Safety Administration provide the means for insight into what factors influence collisions. These insights could provide awareness for drivers on what factors to be wary of while driving, such as number of passengers, weather conditions, location, time of day, and other variables that the data provide. Communicating the relationships the data reveal can allow drivers to be safer in or avoid conditions that are more prone to accidents. For lawmakers, the same insights could influence traffic laws which increase safety on the road. In addition to influencing traffic laws, the data could provide insight into why current traffic laws are currently in place, such as legal limits for alcohol. The collision data is expansive and lends itself to many angles for analysis. As data exploration and data cleaning progress, we will be able to narrow the scope of analysis and determine the effect a handful of factors have on collision rates.
+Our goal in analyzing the data is to learn about which factors contribute the most to the number of fatal traffic accidents in the US. Some questions we are interested in answering with the data are:
+
+* During what time period has the highest accident rate?
+
+* What is the relationship between the number of victims and the driver blood alcohol concentration?
+
+* What type of vehicle has the highest rate of collision? 
+
+* Who are the people(race, gender, age) who die in these accidents?
+
+Before conducting the analysis, we are going to clean the dataset. We will drop the NAs and relevant columns, eliminate duplicates, and transform the data as needed. Since the data is broken into several different tables, we will need to join several of them together using year as a key.
+To visualize the data, we will use mainly tables and ggplot. We will use several different types of plots (histograms, barplots, scatterplot matrix, correlation matrix, etc.) to see how variables are distributed and how they relate to the number of fatal accidents. By visualizing the data this way, we hope to see relationships that help us answer the questions listed above.
 
 
 ### Question 1
@@ -26,7 +40,100 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### What is the relationship between the number of victims and the driver blood alcohol concentration?
 
+##### Data Cleaning
+```{r}
+library(readxl)
+#my_data <- read_excel("Alcohol.xls", sheet = "data")
+my_data <- read.table(file = "Alcohol.xls", 
+                      sep = "\t", header=TRUE)
+colnames(my_data)
+```
+
+As you can see above, there are total 11 columns, but they are pretty messy and unreadable. 
+The original table contains the information of different Blood Alcohol Concentration levels from year 1994-2017. I broke it down into 4 different tables based off different BAC levels. 
+
+
+```{r}
+library(dplyr)
+Zero_BAC = select(my_data, -4:-11)
+Mid_BAC=select(my_data, -2:-3,-6:-11)
+High_BAC = select(my_data, -2:-5,-8:-11)
+Overall_BAC = select(my_data, -2:-8,-11)
+
+colnames(Zero_BAC)[colnames(Zero_BAC)=="X"] <- "Year"
+colnames(Zero_BAC)[colnames(Zero_BAC)=="BAC....00"] <- "Number of Fatalities without Alcohol"
+colnames(Zero_BAC)[colnames(Zero_BAC)=="X.1"] <- "Percent"
+
+colnames(Mid_BAC)[colnames(Mid_BAC)=="X"] <- "Year"
+colnames(Mid_BAC)[colnames(Mid_BAC)=="BAC....01...07"] <- "Number of Fatalities"
+colnames(Mid_BAC)[colnames(Mid_BAC)=="X.2"] <- "Percent"
+
+colnames(High_BAC)[colnames(High_BAC)=="X"] <- "Year"
+colnames(High_BAC)[colnames(High_BAC)=="BAC....08."] <- "Number of Fatalities"
+colnames(High_BAC)[colnames(High_BAC)=="X.3"] <- "Percent"
+
+colnames(Overall_BAC)[colnames(Overall_BAC)=="X"] <- "Year"
+colnames(Overall_BAC)[colnames(Overall_BAC)=="Total.Fatalities.in.Alcohol..Related.Crashes"] <- "Total.Fatalities.in.Alcohol"
+colnames(Overall_BAC)[colnames(Overall_BAC)=="X.4"] <- "Percent"
+
+#Drop first row for each table 
+Zero_BAC = Zero_BAC[-1,]
+Mid_BAC = Mid_BAC[-1,]
+High_BAC= High_BAC[-1,]
+Overall_BAC=Overall_BAC[-1,]
+
+head(Zero_BAC)
+head(Mid_BAC)
+head(High_BAC)
+head(Overall_BAC)
+```
+##### Data Exploration
+
+The number of fatalities is already collected and summaried in the original dataset, which means each year has a corresponding data point/value. I found it's not feasible for me to make line plot,bar plot and pie chart. So I did the scatter plot. In order to make good comparsion between Number of Fatalities without Alcohol and Total Fatalities in Alcohol, I set the same y-axis(100-3000) ranges for both plots. 
+
+```{r}
+library(ggplot2)
+ggplot(Zero_BAC, aes(x=Year, y=as.numeric(as.character(`Number of Fatalities without Alcohol`)), color=Percent))+ylim(100,3000)+geom_smooth()+geom_point()+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities without Alcohol from Year 1994 to 2017", y = "Number of Fatalities")
+```
+
+```{r}
+ggplot(Overall_BAC, aes(x=Year, y=as.numeric(as.character(`Total.Fatalities.in.Alcohol`)), color=Percent))+ylim(100,3000) +geom_point()+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Total Fatalities in Alcohol from Year 1994 to 2017",y = "Number of Fatalities")
+```
+
+I looked into the relationships between different levels of BAC and number of fatalities. Same here, I use the same y-axis ranges(100-1300) for both plots. 
+
+```{r}
+ggplot(Mid_BAC, aes(x=Year, y=as.numeric(as.character(`Number of Fatalities`)), color=Percent))+ylim(100,1300)+geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities(BAC0.01~0.08) from Year 1994 to 2017", y = "Number of Fatalities")
+```
+
+```{r}
+ggplot(High_BAC, aes(x=Year, y=as.numeric(as.character(`Number of Fatalities`)), color=Percent))+ylim(100,1300)+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities(BAC0.08+) from Year 1994 to 2017" , y = "Number of Fatalities")
+```
+
+##### Conclusions
+It’s interesting to see that the number of fatalities without alcohol is less than the number of fatalities in alcohol. Which indicates there are more factors, like if the driver wore the seat belt, can lead to fatal crashes. 
+**BAC can affect the accident rate, but the key indicator for the fatal crashes is not BAC.**
+
+Number of the victims with lower BAC is clearly (at least 4 times) less than number of the victims with higher BAC. 
+**So, the accident rate will increase, as BAC increase. **
+
+
+##### Challenges
+
+I had plotting the data pionts in ggplot in the beginning. 
+At frist I wrote:
+ggplot(Zero_BAC, aes(x=Year, y=`Number of Fatalities without Alcohol`, color=Percent))+ylim(100,3000)+geom_point()+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(title="Number of Fatalities without Alcohol from Year 1994 to 2017", y = "Number of Fatalities")
+
+It gives an error "Error: Discrete value supplied to continuous scale". 
+And then, I found I need to make the "y" as charater and then transform it into numercial value: **y=as.numeric(as.character(`Number of Fatalities without Alcohol`))**
+
+##### Citations
+https://stackoverflow.com/questions/29278153/plotting-with-ggplot2-error-discrete-value-supplied-to-continuous-scale-on-c
+
 ### Question 3
+
+#### What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?
+
 
 #### What type of vehicle has the highest rate of collision? How is the vehicle type related to the number of victims?
 
@@ -64,10 +171,10 @@ ggplot(type,aes(Year,PV_per_100M))+geom_line(color='red')+labs(x="Year",y="Numbe
 geom_line(aes(Year,LiT_per_100M),color='blue')+
 geom_line(aes(Year,LT_per_100M),color='green')+annotate("label",x=1995,y=2.75,label="Large Trucks")+annotate("label",x=1995,y=2.2,label="Light Trucks")+annotate("label",x=1996,y=1.75,label="Passenger Cars")
 
-ggplot(type,aes(Year,PV_per_100_RV))+geom_line(color='red')+labs(x="Year",y="Number of Accidents with a Passenger Car",title = "Involvement rate per 100 thousand Registered Vehicles")+
-geom_line(aes(Year,LiT_per_100_RV),color='blue')+
-geom_line(aes(Year,LT_per_100_RV),color='green')+
-geom_line(aes(Year,MC_per_100_RV))+annotate("Label",x=1995,y=75,label="Large Trucks")+annotate("Label",x=1995,y=50,label="Motorcycles")+annotate("Label",x=1995,y=32,label="Light Trucks")+annotate("Label",x=1996,y=20,label="Passenger Vehicles")
+ggplot(type,aes(Year,PV_per_100k_RV))+geom_line(color='red')+labs(x="Year",y="Number of Accidents with a Passenger Car",title = "Involvement rate per 100 thousand Registered Vehicles")+
+geom_line(aes(Year,LiT_per_100k_RV),color='blue')+
+geom_line(aes(Year,LT_per_100k_RV),color='green')+
+geom_line(aes(Year,MC_per_100k_RV))+annotate("Label",x=1995,y=75,label="Large Trucks")+annotate("Label",x=1995,y=50,label="Motorcycles")+annotate("Label",x=1995,y=32,label="Light Trucks")+annotate("Label",x=1996,y=20,label="Passenger Vehicles")
 
 ```
 
@@ -81,8 +188,9 @@ colnames(Occupant)
 
 
 ```{r}
-ggplot(Occupant,aes(Year,Total))+geom_line()+labs(x="Year",y="Accidents", title="Accidents by Year")
+ggplot(Occupant,aes(Year,Total))+geom_line(color="Pink")+labs(x="Year",y="Occupants", title="Accidents by Year")+geom_line(aes(Year, PV_Occupants),color="Red")+geom_line(aes(Year,LiT_Occupants),color="blue")+geom_line(aes(Year,LT_Occupants),color="green")+geom_line(aes(Year,MC_Occupants))+annotate("Label",x=1996,y=.925,label="Large Trucks")+annotate("Label",x=1997,y=25000,label="Passenger Vehicle")+annotate("Label",x=1996,y=15000,label="Light Trucks")+annotate("Label",x=1996,y=5000,label="Motorcycles")+annotate("label",x=1996,y=30000,label="Total")
 ```
+
 
 
 ##### Conclusions
@@ -100,4 +208,261 @@ https://stackoverflow.com/questions/44012554/r-how-can-i-annotate-a-ggplot-with-
 ### Question 4
 
 #### Who are the people(race, gender, age) who die in these accidents?
+
+**Libraries**
+```{r}
+library(readxl)
+library(ggplot2)
+library(tidyverse)
+```
+
+**1. Gender**
+One of the demographics I wanted to look into was gender. I loaded a table with information on total fatalities grouped by gender - which had levels: "Male", "Female", "Unknown", and "Total". The only cleaning I did was eliminate an empty column and drop the "Total" and "Unknown" categories from the gender column.
+
+```{r}
+#Load data
+gender = read.table('Gender.xls', sep = '\t', header = TRUE)
+head(gender)
+#drop empty NA column
+gender = gender[-3] 
+#Narrow down to just male and female
+gender$FieldDesc = droplevels(gender$FieldDesc, exclude= c("Total","Unknown"))
+gender = na.omit(gender) 
+head(gender)
+```
+
+Visualization
+```{r}
+ggplot(gender, aes(FieldDesc, Total, fill=FieldDesc)) + 
+  geom_bar(stat="Identity") + 
+  theme_minimal() + 
+  labs(title="Total Fatalities by Gender", x="", y="Total Fatalities")
+```
+From the plot, we can see that fatalities for men are more than double that of women. There are likely many reasons for this result. In order to break this down further, I would look into other tables involving gender. Tables on the gender and driver status of all fatalities or gender ratios over time, for example, might provide further insight as to why there are more male fatalities; however, I was not able to cover that in this analysis.
+
+**2. Age ranges**
+
+In order to take a look at age ranges, I loaded tables for all years(1994-2017) which included fatalities grouped by age. 
+```{r}
+#Load tables
+Age1994 = read.table('Age1994.xls', sep = '\t', header = TRUE)
+Age1995 = read.table('Age1995.xls', sep = '\t', header = TRUE)
+Age1996 = read.table('Age1996.xls', sep = '\t', header = TRUE)
+Age1997 = read.table('Age1997.xls', sep = '\t', header = TRUE)
+Age1998 = read.table('Age1998.xls', sep = '\t', header = TRUE)
+Age1999 = read.table('Age1999.xls', sep = '\t', header = TRUE)
+Age2000 = read.table('Age2000.xls', sep = '\t', header = TRUE)
+Age2001 = read.table('Age2001.xls', sep = '\t', header = TRUE)
+Age2002 = read.table('Age2002.xls', sep = '\t', header = TRUE)
+Age2003 = read.table('Age2003.xls', sep = '\t', header = TRUE)
+Age2004 = read.table('Age2004.xls', sep = '\t', header = TRUE)
+Age2005 = read.table('Age2005.xls', sep = '\t', header = TRUE)
+Age2006 = read.table('Age2006.xls', sep = '\t', header = TRUE)
+Age2007 = read.table('Age2007.xls', sep = '\t', header = TRUE)
+Age2008 = read.table('Age2008.xls', sep = '\t', header = TRUE)
+Age2009 = read.table('Age2009.xls', sep = '\t', header = TRUE)
+Age2010 = read.table('Age2010.xls', sep = '\t', header = TRUE)
+Age2011 = read.table('Age2011.xls', sep = '\t', header = TRUE)
+Age2012 = read.table('Age2012.xls', sep = '\t', header = TRUE)
+Age2013 = read.table('Age2013.xls', sep = '\t', header = TRUE)
+Age2014 = read.table('Age2014.xls', sep = '\t', header = TRUE)
+Age2015 = read.table('Age2015.xls', sep = '\t', header = TRUE)
+Age2016 = read.table('Age2016.xls', sep = '\t', header = TRUE)
+Age2017 = read.table('Age2017.xls', sep = '\t', header = TRUE)
+```
+
+Before merging all the data frames, I removed empty columns and renamed the variables to specify the year.
+```{r}
+#Rename columns and remove empty columns
+Age1994 = Age1994[-3]
+names(Age1994) = c("Age","Killed1994")
+Age1995 = Age1995[-3]
+names(Age1995) = c("Age","Killed1995")
+Age1996 = Age1996[-3]
+names(Age1996) = c("Age","Killed1996")
+Age1997 = Age1997[-3]
+names(Age1997) = c("Age","Killed1997")
+Age1998 = Age1998[-3]
+names(Age1998) = c("Age","Killed1998")
+Age1999 = Age1999[-3]
+names(Age1999) = c("Age","Killed1999")
+Age2000 = Age2000[-3]
+names(Age2000) = c("Age","Killed2000")
+Age2001 = Age2001[-3]
+names(Age2001) = c("Age","Killed2001")
+Age2002 = Age2002[-3]
+names(Age2002) = c("Age","Killed2002")
+Age2003 = Age2003[-3]
+names(Age2003) = c("Age","Killed2003")
+Age2004 = Age2004[-3]
+names(Age2004) = c("Age","Killed2004")
+Age2005 = Age2005[-3]
+names(Age2005) = c("Age","Killed2005")
+Age2006 = Age2006[-3]
+names(Age2006) = c("Age","Killed2006")
+Age2007 = Age2007[-3]
+names(Age2007) = c("Age","Killed2007")
+Age2008 = Age2008[-3]
+names(Age2008) = c("Age","Killed2008")
+Age2009 = Age2009[-3]
+names(Age2009) = c("Age","Killed2009")
+Age2010 = Age2010[-3]
+names(Age2010) = c("Age","Killed2010")
+Age2011 = Age2011[-3]
+names(Age2011) = c("Age","Killed2011")
+Age2012 = Age2012[-3]
+names(Age2012) = c("Age","Killed2012")
+Age2013 = Age2013[-3]
+names(Age2013) = c("Age","Killed2013")
+Age2014 = Age2014[-3]
+names(Age2014) = c("Age","Killed2014")
+Age2015 = Age2015[-3]
+names(Age2015) = c("Age","Killed2015")
+Age2016 = Age2016[-3]
+names(Age2016) = c("Age","Killed2016")
+Age2017 = Age2017[-3]
+names(Age2017) = c("Age","Killed2017")
+```
+
+```{r}
+#Merge
+AgeTotal = merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(merge(
+  Age1994,
+  Age1995,all=TRUE),
+  Age1996,all=TRUE),
+  Age1997,all=TRUE),
+  Age1998,all=TRUE),
+  Age1999,all=TRUE),
+  Age2000,all=TRUE),
+  Age2001,all=TRUE),
+  Age2002,all=TRUE),
+  Age2003,all=TRUE),
+  Age2004,all=TRUE),
+  Age2005,all=TRUE),
+  Age2006,all=TRUE),
+  Age2007,all=TRUE),
+  Age2008,all=TRUE),
+  Age2009,all=TRUE),
+  Age2010,all=TRUE),
+  Age2011,all=TRUE),
+  Age2012,all=TRUE),
+  Age2013,all=TRUE),
+  Age2014,all=TRUE),
+  Age2015,all=TRUE),
+  Age2016,all=TRUE),
+  Age2017,all=TRUE)
+
+head(AgeTotal)
+```
+
+I dropped the "Total" level from the age column and put the other levels in the correct order. I then added a column for the total number of fatalities in each group.
+```{r}
+AgeTotal = droplevels(AgeTotal, exclude = c("Total"))
+AgeTotal$Age = ordered(AgeTotal$Age, levels=c('< 5','5 -- 9','10 -- 15','16 -- 20', '21 -- 24', '25 -- 34', '35 -- 44', '45 -- 54', '55 -- 64', '65 -- 74', '75 +', '> 74'))
+AgeTotal = na.omit(AgeTotal)
+AgeTotal = mutate(AgeTotal, total= Killed1994+Killed1995+Killed1996+Killed1997+Killed1998+Killed1999+Killed2000+Killed2001+Killed2002+Killed2003+Killed2004+Killed2005+Killed2006+Killed2007+Killed2008+Killed2009+Killed2010+Killed2011+Killed2012+Killed2013+Killed2014+Killed2015+Killed2016+Killed2017)
+```
+
+Visualization
+```{r}
+ggplot(AgeTotal, aes(Age,total,fill=Age)) + 
+  geom_bar(stat="Identity") + 
+  labs(title="1994-2017 Fatalities by Age", y="Fatalities") + 
+  theme_minimal() + theme(axis.text.x=element_blank())
+```
+We can see that the age group with the highest number of fatalities from 1995 to 2017 is 25-34 years old.
+
+**3. Use of seatbelts**
+
+I was very interested in the data involving the use of restraints for the total fatalities. I loaded the data, removed an empty column, and reordered the age groups.
+```{r}
+restraint = read.table('restraint.xls', sep = '\t', header = TRUE, skip=2)
+#drop empty column
+restraint = restraint[-10] 
+restraint$FieldDesc = droplevels(restraint$FieldDesc, exclude = c('< 5','5 -- 9','10 -- 15','16 -- 20', '21 -- 24', '25 -- 34', '35 -- 44', '45 -- 54', '55 -- 64', '65 -- 74', '75 +', '> 74', 'Unknown'))
+restraint = na.omit(restraint)
+head(restraint)
+```
+
+I changed the data to long form and converted the status column to a factor. I wanted to narrow down the data to only the total percentages, so I dropped the levels for the total counts. Before plotting the percentages, I reordered and renamed the levels.
+```{r}
+restraint = gather(restraint, key=FieldDesc)
+head(restraint)
+
+#Narrow down to total percentages
+restraint$FieldDesc = factor(restraint$FieldDesc)
+restraint$FieldDesc = droplevels(restraint$FieldDesc, exclude = c("Restraint.Use.Unknown","Restraint.Not.Used","Restraint.Used","Total"))
+restraint = na.omit(restraint)
+
+#Reorder and rename levels
+restraint$FieldDesc = ordered(restraint$FieldDesc, levels=c("Percent2","Percent1","Percent","Percent3"))
+levels(restraint$FieldDesc) = c("Unknown","Not Used","Used","Total")
+
+#Plot percentages
+ggplot(restraint, aes(FieldDesc,value,fill=value)) +
+  geom_bar(stat="Identity") + 
+  labs(title="Use of Restraints for Total Fatalities", x="Status",y="Percentage") +
+  theme_minimal() + 
+  geom_text(aes(x=FieldDesc,y=value + 4,label=c("48.4%","42.8%","8.9%","100%"))) +
+  theme(legend.position = "none")
+```
+From the data, it seems that the fatality percentages are pretty close for those who did and did not wear seat belts. The total column represents the entire number of fatalities and was only added for comparison.
+
+**4. Age and seatbelt use**
+
+Lastly, I wanted to know what the data could tell me about use of seat belts based on age range. I loaded the same restraint data as before and did some of the same cleaning to get the levels in the right order then plotted the fatalities by age group. 
+```{r}
+restraint.age = read.table('restraint.xls', sep = '\t', header = TRUE, skip=2)
+restraint.age = restraint.age[-10]
+
+#Drop total category
+restraint.age$FieldDesc = droplevels(restraint.age$FieldDesc, exclude = "Total")
+restraint.age = na.omit(restraint.age)
+#Levels out of order
+levels(restraint.age$FieldDesc)
+restraint.age$FieldDesc = ordered(restraint.age$FieldDesc, levels=c('< 5','5 -- 9','10 -- 15','16 -- 20', '21 -- 24', '25 -- 34', '35 -- 44', '45 -- 54', '55 -- 64', '65 -- 74', '75 +', '> 74', 'Unknown'))
+head(restraint.age)
+```
+
+```{r}
+#Plot restraints used by age
+ggplot(restraint.age, aes(FieldDesc,Restraint.Used,fill=FieldDesc)) +
+  geom_bar(stat="Identity") + 
+  labs(title="Restraints Used", y="Fatalities with restraints",x="Age") +
+  theme_minimal() +
+  theme(axis.text.x=element_blank())
+```
+\
+The age group with the most fatalities for those who used restraints was over 74 years old. To me this makes sense because older people probably tend to wear seatbelts more often than younger age groups.
+
+```{r}
+#Plot resytaints not used by age
+ggplot(restraint.age, aes(FieldDesc,Restraint.Not.Used,fill=FieldDesc)) + 
+  geom_bar(stat="Identity") + 
+  labs(title="Restraints Not Used", y="Fatalities without restraints",x="Age") + 
+  theme_minimal() + 
+  theme(axis.text.x=element_blank())
+```
+\
+The age group with the most fatalities of those who did not use restraints was 21-24 years old. There are significantly more fatalities for this group than the others. A reason for this could be that people in this age group tend to wear seat belts less often than other age groups.
+
+```{r}
+ggplot(restraint.age, aes(FieldDesc,Restraint.Use.Unknown,fill=FieldDesc)) +
+  geom_bar(stat="Identity") + 
+  labs(title="Restraint Use Unknown",y="Fatalities with unknown restraint use",x="Age") +
+  theme_minimal() + 
+  theme(axis.text.x=element_blank())
+```
+\
+There are also some fatalities with unknown seatbelt use. Most of those are in the 21-24 year-old age range.
+
+
+**Challenges**
+\
+Although the data was very clean with very few missing values, the way some of the tables were layed out was difficult for me to work with. It was challenging to get the data into the form I needed for certain visualizations. I struggled with joining the data for age ranges since there were so many tables to work with. I ended up using merge functions to join the data because it was the most straight forward way I could find. It also took me a long time to rearrange the data for seatbelt use and plot the total percentages. Initially, I wanted to make a proportion plot as I did before in labs and homework. For some reason none of the percentages would plot correctly and I resorted to a regular bar plot instead. I had also originally planned to do further visualization using the gender data, but realized later that the tables for all years (1994-2017) were all exactly the same. Because of that, I wasn't able to plot the gender ratios for each year as I had originally planned.
+
+**Citations**
+\
+merging data frames: https://jozef.io/r006-merge/
+
 
